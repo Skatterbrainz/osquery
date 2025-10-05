@@ -12,12 +12,15 @@ function Get-OsQueryFiles {
 		Switch to suppress the case sensitivity warning on Linux systems.
 	.EXAMPLE
 		Get-OsQueryFiles -Path "/etc/"
+		
 		Retrieves file information from the /etc/ directory on a Linux system.
 	.EXAMPLE
 		Get-OsQueryFiles -Path "C:\Windows\System32\" -ComputerName "RemotePC"
+		
 		Retrieves file information from the C:\Windows\System32\ directory on the remote computer named RemotePC.
 	.EXAMPLE
 		Get-OsQueryFiles -Path "/Users/Shared/" -NoWarning
+		
 		Retrieves file information from the /Users/Shared/ directory on a macOS system without displaying a case sensitivity warning.
 	#>
 	param (

@@ -11,9 +11,11 @@ function Get-OsQuerySchema {
 		The name of the remote computer to execute the query on. If not provided, the query
 	.EXAMPLE
 		Get-OsQuerySchema
+		
 		Retrieves the osquery table schema information.
 	.EXAMPLE
 		Get-OsQuerySchema -Type 'table' -ComputerName 'RemotePC'
+		
 		Retrieves the osquery table schema information from the remote computer named RemotePC.
 	.NOTES
 	#>

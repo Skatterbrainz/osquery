@@ -12,9 +12,11 @@ function Invoke-OsQueryTableQuery {
 		The name of the remote computer to execute the query on. If not provided, the query
 	.EXAMPLE
 		Invoke-OsQueryTableQuery -Query "SELECT * FROM processes;"
+
 		Executes the specified query against the osquery processes table.
 	.EXAMPLE
 		Invoke-OsQueryTableQuery -TableName "users"
+		
 		Executes a default query against the osquery users table.
 	.NOTES
 	#>
