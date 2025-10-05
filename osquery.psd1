@@ -23,7 +23,7 @@
 	# TypesToProcess = @()
 	# FormatsToProcess = @()
 	# NestedModules = @()
-	FunctionsToExport = @("Get-*","Invoke-*")
+	FunctionsToExport = @("Get-*","Invoke-*","Test-*")
 	CmdletsToExport   = @()
 	VariablesToExport = '*'
 	AliasesToExport   = @()
