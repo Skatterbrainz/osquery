@@ -16,6 +16,9 @@ function Get-OsQueryFiles {
 	.EXAMPLE
 		Get-OsQueryFiles -Path "C:\Windows\System32\" -ComputerName "RemotePC"
 		Retrieves file information from the C:\Windows\System32\ directory on the remote computer named RemotePC.
+	.EXAMPLE
+		Get-OsQueryFiles -Path "/Users/Shared/" -NoWarning
+		Retrieves file information from the /Users/Shared/ directory on a macOS system without displaying a case sensitivity warning.
 	#>
 	param (
 		[parameter(Mandatory=$true)][string]$Path,

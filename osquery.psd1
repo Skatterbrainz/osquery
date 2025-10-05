@@ -3,7 +3,7 @@
 # Generated on: 10/5/2025
 
 @{
-	# RootModule = ''
+	RootModule = 'osquery.psm1'
 	ModuleVersion     = '1.0.0'
 	# CompatiblePSEditions = @()
 	GUID              = 'db1ebc51-18f4-4257-b8de-37092fdbe2c3'

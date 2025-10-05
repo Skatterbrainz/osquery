@@ -20,7 +20,7 @@ function Invoke-OsQueryTableQuery {
 	#>
 	param(
 		[parameter(Mandatory=$false)][string]$Query,
-		[parameter(Mandatory=$false)][string]$TableName,
+		[parameter(Mandatory=$false)][string][Alias('Table')]$TableName,
 		[parameter(Mandatory=$false)][string]$ComputerName
 	)
 	try {

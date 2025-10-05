@@ -15,8 +15,11 @@ if ($IsLinux) {
 		Write-Warning "osqueryd not found in /opt/osquery/lib/. Please ensure osquery is installed."
 		return
 	}
+} else {
+	Write-Warning "Unsupported operating system."
+	return
 }
 
-Get-ChildItem -Path $PSScriptRoot\*.ps1 | ForEach-Object {
+Get-ChildItem -Path "$PSScriptRoot\public" -Filter "*.ps1" | ForEach-Object {
 	. $_.FullName
 }
