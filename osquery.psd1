@@ -4,7 +4,7 @@
 
 @{
 	RootModule = 'osquery.psm1'
-	ModuleVersion     = '1.0.0'
+	ModuleVersion     = '1.0.1'
 	# CompatiblePSEditions = @()
 	GUID              = 'db1ebc51-18f4-4257-b8de-37092fdbe2c3'
 	Author            = 'skatterbrainz'
@@ -32,9 +32,9 @@
 	# FileList = @()
 	PrivateData       = @{
 		PSData = @{
-			Tags = @("osquery","powerShell","skatterbrainz")
-			# LicenseUri = ''
-			# ProjectUri = ''
+			Tags = @("osquery","powerShell","inventory","query","database","sql","skatterbrainz")
+			LicenseUri = 'https://github.com/Skatterbrainz/osquery/blob/main/LICENSE'
+			ProjectUri = 'https://github.com/Skatterbrainz/osquery'
 			# IconUri = ''
 			# ReleaseNotes = ''
 			# Prerelease = ''

@@ -9,3 +9,5 @@ osquery Home page: [https://osquery.io](https://osquery.io/)
 Downloads: [https://osquery.io/downloads/official](https://osquery.io/downloads/official)
 
 Documentation: [https://osquery.readthedocs.io/en/stable/](https://osquery.readthedocs.io/en/stable/)
+
+Schema Reference: [https://osquery.io/schema](https://osquery.io/schema)
