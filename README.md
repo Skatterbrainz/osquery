@@ -11,3 +11,7 @@ Downloads: [https://osquery.io/downloads/official](https://osquery.io/downloads/
 Documentation: [https://osquery.readthedocs.io/en/stable/](https://osquery.readthedocs.io/en/stable/)
 
 Schema Reference: [https://osquery.io/schema](https://osquery.io/schema)
+
+# Tips
+
+Remember to update osquery on each client, as new versions are released.
