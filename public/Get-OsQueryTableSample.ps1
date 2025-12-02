@@ -36,21 +36,29 @@ function Get-OsQueryTableSample {
 		Write-Error "No osquery tables found. Ensure osquery is installed and accessible."
 		return
 	}
-	if ($IsWindows) {
-		$table = $tables | Out-GridView -Title "Select a Table to Query" -OutputMode Single
-	} else {
-		if (Get-Module -Name helium -ListAvailable) {
-			$table = Out-GridSelect -InputObject $tables -Title "Select a Table to Query"
-		} elseif (Get-Module -Name Microsoft.PowerShell.ConsoleGuiTools -ListAvailable) {
-			$table = $tables | Out-ConsoleGridView -Title "Select a Table to Query" -OutputMode Single
+	if ([string]::IsNullOrEmpty($TableName)) {
+		if ($IsWindows) {
+			$table = $tables | Out-GridView -Title "Select a Table to Query" -OutputMode Single
 		} else {
-			Write-Warning "For an enhanced selection experience, consider installing the 'helium' or 'Microsoft.PowerShell.ConsoleGuiTools' module."
+			if (Get-Module -Name helium -ListAvailable) {
+				$table = Out-GridSelect -InputObject $tables -Title "Select a Table to Query"
+			} elseif (Get-Module -Name Microsoft.PowerShell.ConsoleGuiTools -ListAvailable) {
+				$table = $tables | Out-ConsoleGridView -Title "Select a Table to Query" -OutputMode Single
+			} else {
+				Write-Warning "For an enhanced selection experience, consider installing the 'helium' or 'Microsoft.PowerShell.ConsoleGuiTools' module."
+			}
+		}
+	} else {
+		$table = $tables | Where-Object { $_.name -eq $TableName }
+		if (-not $table) {
+			Write-Error "Table '$TableName' not found in osquery schema."
+			return
 		}
 	}
 	if ($table) {
 		$query = "SELECT * FROM $($table.name) LIMIT $Limit;"
 		Write-Output $query
-		Invoke-OsQueryTableQuery -Query $query
+		Invoke-OsQueryTableQuery -Query $query | Select-Object -Property *, @{Name = "tablename"; Expression = { $table.name }}
 	} else {
 		Write-Error "No table selected."
 	}
