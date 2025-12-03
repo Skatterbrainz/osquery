@@ -4,7 +4,7 @@
 
 @{
 	RootModule = 'osquery.psm1'
-	ModuleVersion     = '1.0.2'
+	ModuleVersion     = '1.0.3'
 	# CompatiblePSEditions = @()
 	GUID              = 'db1ebc51-18f4-4257-b8de-37092fdbe2c3'
 	Author            = 'skatterbrainz'

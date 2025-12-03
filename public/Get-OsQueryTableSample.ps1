@@ -12,6 +12,9 @@ function Get-OsQueryTableSample {
 	.PARAMETER Limit
 	(Optional) The number of rows to limit the query results to. Default is 10.
 
+	.PARAMETER Json
+	Switch to output the results in JSON format.
+
 	.EXAMPLE
 	Get-OsQueryTableSample -TableName "processes"
 
@@ -22,6 +25,11 @@ function Get-OsQueryTableSample {
 
 	This command retrieves a sample query for the "users" table, limiting the results to 5 rows.
 
+	.EXAMPLE
+	Get-OsQueryTableSample -TableName "os_version" -Json
+
+	This command retrieves a sample query for the "os_version" table and outputs the results in JSON format.
+
 	.NOTES
 	For Windows platforms, an interactive grid view is provided for table selection.
 	For non-Windows platforms, the function checks for the presence of 'helium' or 'Microsoft.PowerShell.ConsoleGuiTools' modules to provide a grid view selection.
@@ -29,7 +37,8 @@ function Get-OsQueryTableSample {
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $false)][string]$TableName,
-		[Parameter(Mandatory = $false)][int]$Limit = 10
+		[Parameter(Mandatory = $false)][int]$Limit = 10,
+		[Parameter(Mandatory = $false)][switch]$Json
 	)
 	$tables = Get-OsQuerySchema
 	if ($tables.Count -eq 0) {
@@ -58,7 +67,11 @@ function Get-OsQueryTableSample {
 	if ($table) {
 		$query = "SELECT * FROM $($table.name) LIMIT $Limit;"
 		Write-Output $query
-		Invoke-OsQueryTableQuery -Query $query | Select-Object -Property *, @{Name = "tablename"; Expression = { $table.name }}
+		if ($Json.IsPresent) {
+			Invoke-OsQueryTableQuery -Query $query | Select-Object -Property *, @{Name = "tablename"; Expression = { $table.name }} | ConvertTo-Json
+		} else {
+			Invoke-OsQueryTableQuery -Query $query | Select-Object -Property *, @{Name = "tablename"; Expression = { $table.name }}
+		}
 	} else {
 		Write-Error "No table selected."
 	}
