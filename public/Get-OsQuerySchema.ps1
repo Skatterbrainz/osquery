@@ -22,12 +22,15 @@ function Get-OsQuerySchema {
 	param(
 		[parameter(Mandatory=$false)]
 		[ValidateSet('config','config_parser','database','distributed','enroll','event_publisher','event_subscriber','logger','numeric_monitoring','sql','table')]
-		[Alias('RegistryType')]
 		[string]$Type = 'table',
 		[parameter(Mandatory=$false)][string]$ComputerName
 	)
 	$params = @{
-		ScriptBlock = { osqueryi --json "SELECT name FROM osquery_registry WHERE registry='$($Type)';" }
+		ScriptBlock  = {
+			param($t, $bin)
+			& $bin --json "SELECT name FROM osquery_registry WHERE registry='$t';"
+		}
+		ArgumentList = $Type, (Get-OsQueryBinaryPath)
 	}
 	if (![string]::IsNullOrEmpty($ComputerName)) {
 		$params.ComputerName = $ComputerName

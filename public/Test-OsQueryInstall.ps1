@@ -3,78 +3,44 @@ function Test-OsQueryInstall {
 	.SYNOPSIS
 		Checks if osquery is installed on the system.
 	.DESCRIPTION
-		Tests for the presence of the osquery installation and returns version information if available.
+		Uses Get-Command to locate osqueryi in PATH and returns version information if available.
 	.PARAMETER Detailed
-		If specified, provides detailed information about the osquery installation.
+		If specified, returns a detailed object with install path and version.
 	.EXAMPLE
 		Test-OsQueryInstall
-		
-		Checks if osquery is installed on the system.
+
+		Returns $true if osqueryi is found in PATH, $false otherwise.
 	.EXAMPLE
 		Test-OsQueryInstall -Detailed
 
-		Checks if osquery is installed and returns detailed information about the installation.
+		Returns a PSCustomObject with Installed, Platform, Path, and Version properties.
 	#>
 	[CmdletBinding()]
 	param(
 		[parameter(Mandatory=$false)][switch]$Detailed
 	)
-	if ($IsLinux) {
-		if (-not(Test-Path -Path "/opt/osquery/bin/osqueryd")) {
-			Write-Verbose "osqueryd not found in /opt/osquery/bin/. Please ensure osquery is installed."
-			return
-		} else {
-			if ($Detailed.IsPresent) {
-				$osqueryPath = "/opt/osquery/bin/osqueryd"
-				$osqueryVersion = & $osqueryPath --version
-				return [PSCustomObject]@{
-					Installed = $True
-					Platform  = 'Linux'
-					Path      = $osqueryPath
-					Version   = $osqueryVersion
-				}
-			} else {
-				$True
+	$platform = if ($IsLinux) { 'Linux' } elseif ($IsWindows) { 'Windows' } elseif ($IsMacOS) { 'MacOS' } else { 'Unknown' }
+	$osqueryPath = Get-OsQueryBinaryPath
+
+	if (-not $osqueryPath) {
+		if ($Detailed.IsPresent) {
+			return [PSCustomObject]@{
+				Installed = $false
+				Platform  = $platform
+				Path      = $null
+				Version   = $null
 			}
 		}
-	} elseif ($IsWindows) {
-		if (-not(Test-Path -Path "C:\Program Files\osquery\osqueryd.exe")) {
-			Write-Verbose "osqueryd not found in C:\Program Files\osquery\. Please ensure osquery is installed."
-			return
-		} else {
-			if ($Detailed.IsPresent) {
-				$osqueryPath = "C:\Program Files\osquery\osqueryd.exe"
-				$osqueryVersion = & $osqueryPath --version
-				return [PSCustomObject]@{
-					Installed = $True
-					Platform  = 'Windows'
-					Path      = $osqueryPath
-					Version   = $osqueryVersion
-				}
-			} else {
-				$True
-			}
-		}
-	} elseif ($IsMacOS) {
-		if (-not(Test-Path -Path "/opt/osquery/lib/osquery.app")) {
-			Write-Verbose "osqueryd not found in /opt/osquery/lib/. Please ensure osquery is installed."
-			return
-		} else {
-			if ($Detailed.IsPresent) {
-				$osqueryPath = "/opt/osquery/lib/osquery.app"
-				$osqueryVersion = & $osqueryPath --version
-				return [PSCustomObject]@{
-					Installed = $True
-					Platform  = 'MacOS'
-					Path      = $osqueryPath
-					Version   = $osqueryVersion
-				}
-			} else {
-				$True
-			}
-		}
-	} else {
-		Write-Verbose "Unsupported operating system."
-		return
+		return $false
 	}
+
+	if ($Detailed.IsPresent) {
+		return [PSCustomObject]@{
+			Installed = $true
+			Platform  = $platform
+			Path      = $osqueryPath
+			Version   = (& $osqueryPath --version 2>&1)
+		}
+	}
+	return $true
 }

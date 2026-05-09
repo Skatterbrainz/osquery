@@ -23,7 +23,8 @@ function Get-OsQueryUsers {
 	
 	[CmdletBinding()]
 	param (
-		[int]$Limit = 0
+		[parameter(Mandatory=$false)][int]$Limit = 0,
+		[parameter(Mandatory=$false)][string]$ComputerName
 	)
 	
 	$tablename = "users"
@@ -33,5 +34,7 @@ function Get-OsQueryUsers {
 	} else {
 		$query = "SELECT * FROM $tablename;"
 	}
-	Invoke-OsQueryTableQuery -Query $query | Select-Object -Property *, @{Name = "tablename"; Expression = { $tablename }}
+	$invokeParams = @{ Query = $query }
+	if (![string]::IsNullOrEmpty($ComputerName)) { $invokeParams.ComputerName = $ComputerName }
+	Invoke-OsQueryTableQuery @invokeParams | Select-Object -Property *, @{Name = "tablename"; Expression = { $tablename }}
 }

@@ -20,6 +20,7 @@ function Invoke-OsQueryTableQuery {
 		Executes a default query against the osquery users table.
 	.NOTES
 	#>
+	[CmdletBinding()]
 	param(
 		[parameter(Mandatory=$false)][string]$Query,
 		[parameter(Mandatory=$false)][string][Alias('Table')]$TableName,
@@ -30,20 +31,25 @@ function Invoke-OsQueryTableQuery {
 			$Query = "SELECT * FROM $TableName;"
 		} elseif ([string]::IsNullOrEmpty($Query) -and [string]::IsNullOrEmpty($TableName)) {
 			throw "Either Query or TableName parameter must be provided."
-		} else {
-			if ($Query.EndsWith(';') -eq $false) {
-				$Query += ';'
-			}
+		} elseif (-not $Query.EndsWith(';')) {
+			$Query += ';'
+		}
+		$bin = Get-OsQueryBinaryPath
+		if (-not $bin -and [string]::IsNullOrEmpty($ComputerName)) {
+			throw "osqueryi not found in PATH. Ensure osquery is installed and accessible."
 		}
 		$params = @{
-			ScriptBlock = { param($q) osqueryi --json $q }
-			ArgumentList = $Query
+			ScriptBlock  = {
+				param($q, $bin)
+				& $bin --json $q
+			}
+			ArgumentList = $Query, $bin
 		}
 		if (![string]::IsNullOrEmpty($ComputerName)) {
 			$params.ComputerName = $ComputerName
 		}
 		Invoke-Command @params | ConvertFrom-Json
 	} catch {
-		Write-Error "$($_.Exception.Message -join(';'))"
+		Write-Error $_.Exception.Message
 	}
 }
