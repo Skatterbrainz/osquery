@@ -5,7 +5,7 @@
 
 @{
 	RootModule = 'osquery.psm1'
-	ModuleVersion     = '2.0.0'
+	ModuleVersion     = '2.1.0'
 	# CompatiblePSEditions = @()
 	GUID              = 'db1ebc51-18f4-4257-b8de-37092fdbe2c3'
 	Author            = 'David Stein'
@@ -25,8 +25,11 @@
 	# FormatsToProcess = @()
 	# NestedModules = @()
 	FunctionsToExport = @(
+		"Disable-OsQueryDaemon",
+		"Enable-OsQueryDaemon",
 		"Get-OsQueryCertificates",
 		"Get-OsQueryCronJobs",
+		"Get-OsQueryDaemonStatus",
 		"Get-OsQueryDisk",
 		"Get-OsQueryDockerContainers",
 		"Get-OsQueryFiles",
@@ -44,12 +47,17 @@
 		"Get-OsQueryTableSample",
 		"Get-OsQueryUsers",
 		"Invoke-OsQueryTableQuery",
+		"New-OsQueryConfig",
 		"Show-OsQueryInstall",
 		"Test-OsQueryInstall"
 	)
 	CmdletsToExport   = @()
 	VariablesToExport = @()
-	AliasesToExport   = @()
+	AliasesToExport   = @(
+		"Disable-OsQueryService",
+		"Enable-OsQueryService",
+		"Get-OsQueryServiceStatus"
+	)
 	# DscResourcesToExport = @()
 	# ModuleList = @()
 	# FileList = @()

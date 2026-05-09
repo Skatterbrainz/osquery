@@ -18,7 +18,7 @@ Idiomatic PowerShell functions that wrap `osqueryi` to query operating system an
 
 ## 🎯 Module Overview
 
-This module exposes 21 public functions covering processes, users, networking, packages, security, storage, and more. All queries run through `osqueryi --json` under the hood and are deserialized into structured objects. Most functions support a `-ComputerName` parameter for remote execution via PowerShell Remoting.
+This module exposes 25 public functions covering processes, users, networking, packages, security, storage, daemon lifecycle management, and more. All queries run through `osqueryi --json` under the hood and are deserialized into structured objects. Most functions support a `-ComputerName` parameter for remote execution via PowerShell Remoting.
 
 ## ✨ Features
 
@@ -30,12 +30,13 @@ This module exposes 21 public functions covering processes, users, networking, p
 - 🔐 **Security** - Firewall rules and installed certificates
 - 🐳 **Containers** - Docker container and image inventory
 - 🔍 **Schema Explorer** - Browse osquery tables interactively and run ad-hoc SQL queries
+- 🛠️ **Daemon Management** - Generate scaffold config, enable/disable osqueryd as a system service, and check daemon status
 
 ## Requirements
 
 - PowerShell 7.0 or higher
 - `osqueryi` installed and available in your `PATH`
-- Elevated privileges (root/Administrator) required for some tables (e.g. `sudoers`, `iptables`)
+- Elevated privileges (root/Administrator) required for some tables (e.g. `sudoers`, `iptables`) and all daemon management functions
 
 ## Installation
 
@@ -168,6 +169,15 @@ Get-OsQueryInstalledPackages | Export-Csv -Path "./packages.csv" -NoTypeInformat
 | `Get-OsQueryFirewall` | Firewall rules (`iptables` / `windows_firewall_rules` / `alf`) |
 | `Get-OsQueryCertificates` | Installed certificates |
 
+### Daemon Management
+
+| Function | Alias | Description |
+|---|---|---|
+| `New-OsQueryConfig` | | Generate a scaffold `osquery.conf` with scheduled queries; optionally write `osquery.flags`. Supports `-WhatIf` |
+| `Enable-OsQueryDaemon` | `Enable-OsQueryService` | Enable and start osqueryd (`systemctl` / `launchctl` / Windows Service). Requires elevation |
+| `Disable-OsQueryDaemon` | `Disable-OsQueryService` | Stop and disable osqueryd. Supports `-WhatIf`. Requires elevation |
+| `Get-OsQueryDaemonStatus` | `Get-OsQueryServiceStatus` | Return daemon status object with `Name`, `Platform`, `Status`, `Enabled`, `PID` |
+
 ### Utility
 
 | Function | Description |
@@ -191,6 +201,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version History
 
+- 2.1.0 - 2026-05-09
+  - Added `New-OsQueryConfig` to generate a scaffold `osquery.conf` (8 scheduled queries, decorators, packs placeholder) and optional `osquery.flags` companion file
+  - Added `Enable-OsQueryDaemon` / `Enable-OsQueryService` to enable and start osqueryd cross-platform
+  - Added `Disable-OsQueryDaemon` / `Disable-OsQueryService` to stop and disable osqueryd; supports `-WhatIf`
+  - Added `Get-OsQueryDaemonStatus` / `Get-OsQueryServiceStatus` to return structured daemon status
+  - Added private `Test-ElevatedPrivilege` helper (Linux/macOS: `id -u`; Windows: `WindowsPrincipal`)
+  - Added `tests/ServiceManagement.Tests.ps1` with 42 Pester v5 tests covering aliases, config generation, privilege gates, WhatIf behavior, and mocked systemctl interactions
+  - Fixed `Write-Verbose` null-guard in Enable/Disable functions when systemctl returns no output
+  - Fixed `Disable-OsQueryDaemon` to skip status call when `-WhatIf` suppresses changes (`$changed` flag)
+  - Fixed `Get-OsQueryDaemonStatus` null-safety for `.Trim()` on systemctl output
 - 2.0.0 - 2026-05-09
   - Added 13 new functions: `Get-OsQueryProcesses`, `Get-OsQueryInstalledPackages`, `Get-OsQueryNetworkConnections`, `Get-OsQuerySystemInfo`, `Get-OsQueryServices`, `Get-OsQueryGroups`, `Get-OsQueryDisk`, `Get-OsQueryFirewall`, `Get-OsQueryCertificates`, `Get-OsQueryLoggedInUsers`, `Get-OsQuerySudoers`, `Get-OsQueryCronJobs`, `Get-OsQueryDockerContainers`
   - Added `Show-OsQueryInstall` to open platform-specific installation docs in the default browser
