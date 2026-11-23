@@ -25,12 +25,14 @@ function Get-OsQuerySchema {
 		[string]$Type = 'table',
 		[parameter(Mandatory=$false)][string]$ComputerName
 	)
+	$query = "SELECT name FROM osquery_registry WHERE registry='$Type';"
+	Write-Verbose "query: $query"
 	$params = @{
 		ScriptBlock  = {
-			param($t, $bin)
-			& $bin --json "SELECT name FROM osquery_registry WHERE registry='$t';"
+			param($t, $bin, $query)
+			& $bin --json $query
 		}
-		ArgumentList = $Type, (Get-OsQueryBinaryPath)
+		ArgumentList = $Type, (Get-OsQueryBinaryPath), $query
 	}
 	if (![string]::IsNullOrEmpty($ComputerName)) {
 		$params.ComputerName = $ComputerName

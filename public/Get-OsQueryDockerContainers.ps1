@@ -31,12 +31,14 @@ function Get-OsQueryDockerContainers {
 
 	$containerTable = 'docker_containers'
 	$containerQuery = if ($Limit -gt 0) { "SELECT * FROM $containerTable LIMIT $Limit;" } else { "SELECT * FROM $containerTable;" }
+	Write-Verbose "query: $containerQuery"
 	$results = Invoke-OsQueryTableQuery -Query $containerQuery @invokeParams |
 		Select-Object -Property *, @{Name = 'tablename'; Expression = { $containerTable }}
 
 	if ($IncludeImages.IsPresent) {
 		$imageTable = 'docker_images'
 		$imageQuery = if ($Limit -gt 0) { "SELECT * FROM $imageTable LIMIT $Limit;" } else { "SELECT * FROM $imageTable;" }
+		Write-Verbose "query: $imageQuery"
 		$images = Invoke-OsQueryTableQuery -Query $imageQuery @invokeParams |
 			Select-Object -Property *, @{Name = 'tablename'; Expression = { $imageTable }}
 		$results = @($results) + @($images)

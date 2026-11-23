@@ -38,5 +38,7 @@ function Get-OsQueryFiles {
 	if ($IsLinux -and (-not $NoWarning)) {
 		Write-Warning "Note: Linux file system queries are typically case sensitive."
 	}
-	Invoke-OsQueryTableQuery -Query "select filename,size from file where path like '$Path%' and filename != '.';" -ComputerName $ComputerName
+	$query = "select filename,size from file where path like '$Path%' and filename != '.';"
+	Write-Verbose "query: $query"
+	Invoke-OsQueryTableQuery -Query $query -ComputerName $ComputerName
 }

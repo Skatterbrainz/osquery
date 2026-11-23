@@ -25,6 +25,7 @@ function Get-OsQueryCertificates {
 	)
 	$tablename = 'certificates'
 	$query = if ($Limit -gt 0) { "SELECT * FROM $tablename LIMIT $Limit;" } else { "SELECT * FROM $tablename;" }
+	Write-Verbose "query: $query"
 	$invokeParams = @{ Query = $query }
 	if (![string]::IsNullOrEmpty($ComputerName)) { $invokeParams.ComputerName = $ComputerName }
 	Invoke-OsQueryTableQuery @invokeParams | Select-Object -Property *, @{Name = 'tablename'; Expression = { $tablename }}

@@ -24,7 +24,9 @@ function Get-OsQueryCronJobs {
 		return
 	}
 	$tablename = 'crontab'
-	$invokeParams = @{ Query = "SELECT * FROM $tablename;" }
+	$query = "SELECT * FROM $tablename;"
+	Write-Verbose "query: $query"
+	$invokeParams = @{ Query = $query }
 	if (![string]::IsNullOrEmpty($ComputerName)) { $invokeParams.ComputerName = $ComputerName }
 	Invoke-OsQueryTableQuery @invokeParams | Select-Object -Property *, @{Name = 'tablename'; Expression = { $tablename }}
 }

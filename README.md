@@ -25,7 +25,7 @@ This module exposes 25 public functions covering processes, users, networking, p
 - 🖥️ **System Info** - Hostname, CPU, memory, OS version, and disk/mount details
 - 👤 **Users & Access** - Local users, groups, logged-in sessions, and sudoers configuration
 - ⚙️ **Processes & Services** - Running processes, startup items, and scheduled cron jobs
-- 📦 **Packages** - Installed packages across deb, rpm, Chocolatey, Homebrew, and Python
+- 📦 **Packages** - Installed packages across deb, rpm, Flatpak, Chocolatey, Homebrew, and Python
 - 🌐 **Networking** - Active sockets, listening ports, and interface IP addresses
 - 🔐 **Security** - Firewall rules and installed certificates
 - 🐳 **Containers** - Docker container and image inventory
@@ -107,7 +107,7 @@ Get-OsQueryNetworkConnections -Listening |
     Format-Table
 ```
 
-### Audit installed deb packages and export to CSV
+### Audit installed packages and export to CSV
 
 ```powershell
 Get-OsQueryInstalledPackages | Export-Csv -Path "./packages.csv" -NoTypeInformation
@@ -152,7 +152,7 @@ Get-OsQueryInstalledPackages | Export-Csv -Path "./packages.csv" -NoTypeInformat
 
 | Function | Description |
 |---|---|
-| `Get-OsQueryInstalledPackages` | Installed packages; auto-detects deb/rpm/Chocolatey/Homebrew/Python |
+| `Get-OsQueryInstalledPackages` | Installed packages from all available package tables; includes `tablename` in output |
 | `Get-OsQueryDockerContainers` | Docker containers; `-IncludeImages` adds image inventory |
 
 ### Networking

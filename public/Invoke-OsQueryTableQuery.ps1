@@ -38,6 +38,7 @@ function Invoke-OsQueryTableQuery {
 		if (-not $bin -and [string]::IsNullOrEmpty($ComputerName)) {
 			throw "osqueryi not found in PATH. Ensure osquery is installed and accessible."
 		}
+		Write-Verbose "Executing query: $Query"
 		$params = @{
 			ScriptBlock  = {
 				param($q, $bin)

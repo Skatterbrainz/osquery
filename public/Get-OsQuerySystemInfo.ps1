@@ -23,7 +23,9 @@ function Get-OsQuerySystemInfo {
 	$invokeParams = @{}
 	if (![string]::IsNullOrEmpty($ComputerName)) { $invokeParams.ComputerName = $ComputerName }
 
+	Write-Verbose "query: SELECT * FROM system_info;"
 	$sysInfo = Invoke-OsQueryTableQuery -Query "SELECT * FROM system_info;" @invokeParams
+	Write-Verbose "query: SELECT * FROM os_version;"
 	$osInfo  = Invoke-OsQueryTableQuery -Query "SELECT * FROM os_version;" @invokeParams
 
 	if ($sysInfo -and $osInfo) {

@@ -31,7 +31,9 @@ function Get-OsQuerySudoers {
 		}
 	}
 	$tablename = 'sudoers'
-	$invokeParams = @{ Query = "SELECT * FROM $tablename;" }
+	$query = "SELECT * FROM $tablename;"
+	Write-Verbose "Executing query: $query"
+	$invokeParams = @{ Query = $query }
 	if (![string]::IsNullOrEmpty($ComputerName)) { $invokeParams.ComputerName = $ComputerName }
 	Invoke-OsQueryTableQuery @invokeParams | Select-Object -Property *, @{Name = 'tablename'; Expression = { $tablename }}
 }
